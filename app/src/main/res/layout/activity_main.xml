@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="16dp"
+    >
+
+
+    <zHelper.view.ZSeekBar
+        android:id="@+id/test_zSeekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        app:zProgress="65"
+        app:zProgressColor="#199"
+        app:zProgressWidth="8dp"
+        />
+
+    <zHelper.view.ZSeekBar
+        android:id="@+id/test_zSeekBar2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="16dp"
+        app:zProgress="85"
+        app:zSeekMode="arc"
+        app:zProgressWidth="16dp"
+        app:zProgressBackgroundWidth="16dp"
+        app:zProgressColorList="#ff1100,#11FF55,#1122FF"
+        />
+
+    <TextView
+        android:id="@+id/test_progress2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="progress"
+        />
+
+    <zHelper.view.ZSeekBar
+        android:id="@+id/test_zSeekBar3"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        app:zProgress="65"
+        app:zSeekMode="line"
+        app:zProgressColor="#f00"
+        app:zProgressCenterColor="#1f1"
+        app:zProgressEndColor="#11f"
+        app:zProgressWidth="16dp"
+        app:zThumb="@drawable/thumb_custom"
+        />
+
+</LinearLayout>
