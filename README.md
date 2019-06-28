@@ -147,6 +147,8 @@ To make gradient color :
 
 ## Installation
 
+**You need to compile sdk 27+**
+
 Just add following dependency in your module `build.gradle`:
 
 ```groovy
