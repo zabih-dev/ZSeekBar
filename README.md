@@ -187,7 +187,7 @@ allprojects {
 ```gradle
 dependencies {
     ...
-    implementation("com.github.zabih-dev:ZSeekBar:1.0.0")
+    implementation("com.github.zabih-dev:ZSeekBar:1.1.0")
 }
 ```
 
