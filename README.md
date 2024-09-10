@@ -53,7 +53,7 @@ Make gradient color 1 :
     app:zProgress="85"
     app:zSeekMode="arc"
     app:zProgressWidth="16dp"
-    app:zProgressBackgroundWidth="16dp"
+    app:zTrackThickness="16dp"
     app:zProgressColorList="#ff1100,#11FF55,#1122FF"
     />
 ```
@@ -124,13 +124,13 @@ ZSeekBar properties are:
 - `zIsRoundEdges` if edges should be rounded or not (`true` by default).
 - `zIsClockwise` if progress clockwise or not (`true` by default).
 - `zIsFloatingThumbColor` if you want change thumb color base on progress color or not (`true` by default).
-- `zProgressBackgroundColor` color of bar behind progress.
+- `zTrackColor` progress track color.
 - `zProgressColorList` make gradient color of visible progress bar, separator by coma.(eg: #ff0000, #00ff00, #0022ff)
 - `zProgressColor` color of visible progress bar.(or gradient start color)
 - `zProgressCenterColor` gradient center color of visible progress bar.
 - `zProgressEndColor` gradient end color of visible progress bar.
 - `zProgressWidth` width of visible progress bar.
-- `zProgressBackgroundWidth` width of bar behind progress.
+- `zTrackThickness` thickness of progress bar.
 - `zThumbWidth` width of thumb drawable.
 - `zThumbTintColor` tint color of thumb.
 - `zThumb` reference to thumb drawable.
@@ -187,7 +187,7 @@ allprojects {
 ```gradle
 dependencies {
     ...
-    implementation("com.github.zabih-dev:ZSeekBar:1.1.0")
+    implementation("com.github.zabih-dev:ZSeekBar:1.2.0")
 }
 ```
 

@@ -4,7 +4,13 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="zSeekBarStyle">@style/BaseZSeekbarStyle</item>
     </style>
 
     <style name="Theme.ZSeekbar" parent="Base.Theme.ZSeekbar" />
+
+    <style name="BaseZSeekbarStyle">
+        <item name="zProgress">40</item>
+        <item name="zProgressColor">@color/colorAccent</item>
+    </style>
 </resources>

@@ -30,7 +30,7 @@
         app:zProgress="85"
         app:zSeekMode="arc"
         app:zProgressWidth="16dp"
-        app:zProgressBackgroundWidth="16dp"
+        app:zTrackThickness="16dp"
         app:zProgressColorList="#ff1100,#11FF55,#1122FF"
         />
 

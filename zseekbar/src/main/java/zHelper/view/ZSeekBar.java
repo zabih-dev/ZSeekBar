@@ -11,7 +11,9 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -41,7 +43,7 @@ public class ZSeekBar extends View {
   protected Paint thumbPaint = new Paint();
   protected RectF ovalRectF = new RectF();
   protected float progressWidth;
-  protected float progressBackgroundWidth;
+  protected float trackThickness;
   protected float thumbDrawableWidth;
   protected int thumbTintColor;
   protected @Nullable Drawable thumbDrawable;
@@ -56,7 +58,7 @@ public class ZSeekBar extends View {
   protected boolean isClockwise;
   protected boolean isUserSeekable = true;
   protected boolean isRoundEdges;
-  protected int progressBackgroundColor;
+  protected int trackColor;
   protected @Nullable int[] progressColorList;
   protected @Nullable int[] reversedProgressColorList;
   protected @Nullable OnZArcSeekBarChangeListener onZArcSeekBarChangeListener;
@@ -91,6 +93,8 @@ public class ZSeekBar extends View {
   protected final double pi = Math.PI;
   protected final float zero = 0.0001F;
 
+  protected final int DEFAULT_SIZE = (int) (64 * getResources().getDisplayMetrics().density);
+
 
 
   public interface OnZArcSeekBarChangeListener {
@@ -114,7 +118,17 @@ public class ZSeekBar extends View {
 
   public ZSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    final int accentColor = getResources().getColor(R.color.colorAccent);
+
+    int defTrackColor = Color.GRAY;
+    int defIndicatorColor = getResources().getColor(R.color.colorAccent);
+
+    if (Build.VERSION.SDK_INT >= 21) {
+      TypedValue typedValue = new TypedValue();
+      context.getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
+      defIndicatorColor = typedValue.data;
+      context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorSecondaryContainer, typedValue, true);
+      defTrackColor = typedValue.data;
+    }
 
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ZSeekBar, defStyleAttr, 0);
 
@@ -128,21 +142,24 @@ public class ZSeekBar extends View {
     isRoundEdges = typedArray.getBoolean(R.styleable.ZSeekBar_zIsRoundEdges, true);
     isFloatingThumbColor = typedArray.getBoolean(R.styleable.ZSeekBar_zIsFloatingThumbColor, true);
     progressWidth = typedArray.getDimension(R.styleable.ZSeekBar_zProgressWidth, 8);
-    progressBackgroundWidth = typedArray.getDimension(R.styleable.ZSeekBar_zProgressBackgroundWidth, 4);
+    trackThickness = typedArray.getDimension(R.styleable.ZSeekBar_zTrackThickness, 4);
     //
     thumbDrawable = typedArray.getDrawable(R.styleable.ZSeekBar_zThumb);
-    int thumbDefaultColor = thumbDrawable == null ? accentColor : 0;
+    int thumbDefaultColor = thumbDrawable == null ? defIndicatorColor : 0;
     thumbTintColor = typedArray.getColor(R.styleable.ZSeekBar_zThumbTintColor, thumbDefaultColor);
     float thumbWidthDef = thumbDrawable != null ? -1 : progressWidth * 2.5f;
     thumbDrawableWidth = typedArray.getDimension(R.styleable.ZSeekBar_zThumbWidth, thumbWidthDef);
     //
-    progressBackgroundColor = typedArray.getColor(R.styleable.ZSeekBar_zProgressBackgroundColor, Color.GRAY);
+    trackColor = typedArray.getColor(R.styleable.ZSeekBar_zTrackColor, defTrackColor);
 
     if (thumbDrawableWidth < -1) thumbDrawableWidth = -1;
 
-    int colorStart = typedArray.getColor(R.styleable.ZSeekBar_zProgressColor, accentColor);
-    int colorCenter = typedArray.getColor(R.styleable.ZSeekBar_zProgressCenterColor, -1);
-    int colorEnd = typedArray.getColor(R.styleable.ZSeekBar_zProgressEndColor, -1);
+    boolean isColorCenter = typedArray.hasValue(R.styleable.ZSeekBar_zProgressCenterColor);
+    boolean isColorEnd = typedArray.hasValue(R.styleable.ZSeekBar_zProgressEndColor);
+
+    int colorStart = typedArray.getColor(R.styleable.ZSeekBar_zProgressColor, defIndicatorColor);
+    int colorCenter = typedArray.getColor(R.styleable.ZSeekBar_zProgressCenterColor, colorStart);
+    int colorEnd = typedArray.getColor(R.styleable.ZSeekBar_zProgressEndColor, colorStart);
     //
     String colorList = typedArray.getString(R.styleable.ZSeekBar_zProgressColorList);
 
@@ -158,11 +175,11 @@ public class ZSeekBar extends View {
         }
       }
     } else {
-      List<Integer> tempList = new ArrayList();
+      List<Integer> tempList = new ArrayList<>();
       for (int i = 0; i < 3; i++) {
-        if (i == 0 && colorStart != -1) tempList.add(colorStart);
-        else if (i == 1 && colorCenter != -1) tempList.add(colorCenter);
-        else if (i == 2 && colorEnd != -1) tempList.add(colorEnd);
+        if (i == 0) tempList.add(colorStart);
+        else if (i == 1 && isColorCenter) tempList.add(colorCenter);
+        else if (i == 2 && isColorEnd) tempList.add(colorEnd);
       }
 
       progressColorList = new int[tempList.size()];
@@ -176,6 +193,18 @@ public class ZSeekBar extends View {
     typedArray.recycle();
   }
 
+  @Override
+  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int width = getDefaultSize(DEFAULT_SIZE, widthMeasureSpec);
+    int height = getDefaultSize(DEFAULT_SIZE, heightMeasureSpec);
+    if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
+      width = DEFAULT_SIZE;
+    }
+    if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
+      height = DEFAULT_SIZE;
+    }
+    setMeasuredDimension(width, height);
+  }
 
   protected int getColor(String string) {
     return Color.parseColor(string);
@@ -248,8 +277,8 @@ public class ZSeekBar extends View {
   }
 
 
-  public void setProgressBackgroundWidth(float progressBackgroundWidth) {
-    this.progressBackgroundWidth = progressBackgroundWidth;
+  public void setTrackThickness(float trackThickness) {
+    this.trackThickness = trackThickness;
     postInvalidate();
   }
 
@@ -278,8 +307,8 @@ public class ZSeekBar extends View {
   }
 
 
-  public void setProgressBackgroundColor(int progressBackgroundColor) {
-    this.progressBackgroundColor = progressBackgroundColor;
+  public void setTrackColor(int trackColor) {
+    this.trackColor = trackColor;
     postInvalidate();
   }
 
@@ -702,10 +731,10 @@ public class ZSeekBar extends View {
     progressPaint.setShader(shader);
     progressPaint.setStrokeCap(isRoundEdges ? Paint.Cap.ROUND : Paint.Cap.SQUARE);
     //
-    progressBackgroundPaint.setStrokeWidth(progressBackgroundWidth);
+    progressBackgroundPaint.setStrokeWidth(trackThickness);
     progressBackgroundPaint.setStyle(Paint.Style.STROKE);
     progressBackgroundPaint.setAntiAlias(true);
-    progressBackgroundPaint.setColor(progressBackgroundColor);
+    progressBackgroundPaint.setColor(trackColor);
     progressBackgroundPaint.setStrokeCap(isRoundEdges ? Paint.Cap.ROUND : Paint.Cap.SQUARE);
 
 

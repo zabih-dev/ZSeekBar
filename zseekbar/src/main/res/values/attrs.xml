@@ -9,13 +9,13 @@
         <attr name="zIsRoundEdges" format="boolean"/>
         <attr name="zIsClockwise" format="boolean"/>
         <attr name="zIsFloatingThumbColor" format="boolean"/>
-        <attr name="zProgressBackgroundColor" format="color"/>
+        <attr name="zTrackColor" format="color"/>
         <attr name="zProgressColorList" format="string"/>
         <attr name="zProgressColor" format="color"/>
         <attr name="zProgressCenterColor" format="color"/>
         <attr name="zProgressEndColor" format="color"/>
         <attr name="zProgressWidth" format="dimension"/>
-        <attr name="zProgressBackgroundWidth" format="dimension"/>
+        <attr name="zTrackThickness" format="dimension"/>
         <attr name="zThumbWidth" format="dimension"/>
         <attr name="zThumbTintColor" format="color"/>
         <attr name="zThumb" format="reference"/>
